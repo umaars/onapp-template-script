@@ -1,6 +1,7 @@
 from xml.dom import minidom
 import subprocess
 
+
 def xmlparser():
     '''
     Parses a vmware tools XML file and returns all properties in a dictionary
@@ -28,8 +29,8 @@ class OvfProperties:
         self.onapp_license = kwargs['onapp_license']
         self.onapp_netmask = kwargs['onapp_netmask']
         self.onapp_license = kwargs['onapp_license']
-    
-    def setNetwork(self):
+
+    def setNetwork(self, file_to_change):
         network_props = {
             'BOOTPROTO': "BOOTPROTO=static",
             "NETMASK=": f"NETMASK={self.onapp_netmask}",
@@ -37,21 +38,53 @@ class OvfProperties:
             'GATEWAY=': f"GATEWAY={self.onapp_gw}",
             'DNS1=': f'DNS1={self.onapp_dns}',
         }
+        mylist = list(props.keys())
+        for line in fileinput.input(files=(file_to_change), inplace=1):
+            for each in mylist:
+                if each in line:
+                    line = f"{props[each]}\n"
+                else:
+                    line = line
+            print(line, end='')
+
         return network_props
 
     def setHostname(self):
         # hostname_command = f"hostnamectl set-hostname {self.onapp_fqdn}"
-        hostname_command = f"hostnamectl set-hostname {self.onapp_fqdn}"
-        x = subprocess.run(hostname_command.split(' '))
-        x.check_output()
-        return hostname_command
-        
+        hostname_command = f"sleep 5"
+        x = subprocess.Popen(hostname_command.split(' '))
+        print("waiting 5 seconds")
+        x.wait()
+        print("wait over")
+
+        return "hello"
+
+    def setLicense(self):
+        r = requests.Session()
+        r.headers = {
+            'Accept': 'application/json',
+            'Content-type': 'application/json'
+        }
+        r.auth = 'admin', 'changeme'
+        url = 'http://localhost/settings.json'
+        license_key = self.onapp_license
+        payload = {"configuration": {
+            "isolated_license": "true", "license_key": license_key}}
+        data = r.put(url, json=payload)
+        return data.headers
+
+    @staticmethod
+    def reinstall_rabbitmq():
+        rabbitmq_cmd = "/onapp/onapp-cp-install/onapp"
+        return "finished"
+
     def __str__(self):
         data = f"'onapp_dns': {self.onapp_dns}, 'onapp_fqdn': {self.onapp_fqdn}, 'onapp_gw': {self.onapp_gw}, 'onapp_ipaddr': {self.onapp_ipaddr}, 'onapp_license': {self.onapp_license}, onapp_netmask: {self.onapp_netmask},'onapp_license': {self.onapp_license},"
         return data
 
 
 p = OvfProperties(**xmlparser())
-print(p)
-print(p.setNetwork())
-print(p.setHostname())
+# print(p)
+# print(p.setNetwork())
+# print(p.setHostname())
+print(p.reinstall_rabbitmq())
