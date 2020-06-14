@@ -1,5 +1,8 @@
 from xml.dom import minidom
 import subprocess
+import sys
+import requests
+import fileinput
 
 
 def xmlparser():
@@ -38,11 +41,11 @@ class OvfProperties:
             'GATEWAY=': f"GATEWAY={self.onapp_gw}",
             'DNS1=': f'DNS1={self.onapp_dns}',
         }
-        mylist = list(props.keys())
+        mylist = list(network_props.keys())
         for line in fileinput.input(files=(file_to_change), inplace=1):
             for each in mylist:
                 if each in line:
-                    line = f"{props[each]}\n"
+                    line = f"{network_props[each]}\n"
                 else:
                     line = line
             print(line, end='')
@@ -75,7 +78,9 @@ class OvfProperties:
 
     @staticmethod
     def reinstall_rabbitmq():
-        rabbitmq_cmd = "/onapp/onapp-cp-install/onapp"
+        rabbitmq_cmd = "/onapp/onapp-rabbitmq/onapp-cp-rabbitmq.sh"
+        x = subprocess.Popen(rabbitmq_cmd)
+        x.wait()
         return "finished"
 
     def __str__(self):
