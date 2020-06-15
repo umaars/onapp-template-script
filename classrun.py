@@ -36,8 +36,8 @@ class OvfProperties:
     def setNetwork(self, file_to_change):
         network_props = {
             'BOOTPROTO': "BOOTPROTO=static",
-            "NETMASK=": f"NETMASK={self.onapp_netmask}",
-            "IPADDR=": f"IPADDR={self.onapp_ipaddr}",
+            'NETMASK=': f"NETMASK={self.onapp_netmask}",
+            'IPADDR=': f"IPADDR={self.onapp_ipaddr}",
             'GATEWAY=': f"GATEWAY={self.onapp_gw}",
             'DNS1=': f'DNS1={self.onapp_dns}',
         }
