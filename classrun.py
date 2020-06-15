@@ -91,5 +91,5 @@ class OvfProperties:
 p = OvfProperties(**xmlparser())
 print(p)
 print(p.setNetwork("/etc/sysconfig/network-scripts/ifcfg-ens192"))
-# print(p.setHostname())
+print(p.setHostname())
 # print(p.reinstall_rabbitmq())
