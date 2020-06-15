@@ -90,6 +90,6 @@ class OvfProperties:
 
 p = OvfProperties(**xmlparser())
 print(p)
-print(p.setNetwork("ifcfg-ens160"))
+print(p.setNetwork("ifcfg-ens192"))
 # print(p.setHostname())
 # print(p.reinstall_rabbitmq())
