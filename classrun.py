@@ -54,13 +54,11 @@ class OvfProperties:
 
     def setHostname(self):
         # hostname_command = f"hostnamectl set-hostname {self.onapp_fqdn}"
-        hostname_command = f"sleep 5"
+        hostname_command = f"hostnamectl set-hostname {self.onapp_fqdn}"
         x = subprocess.Popen(hostname_command.split(' '))
-        print("waiting 5 seconds")
         x.wait()
-        print("wait over")
-
-        return "hello"
+        y = subprocess.Popen('hostnamectl')
+        return y
 
     def setLicense(self):
         r = requests.Session()
