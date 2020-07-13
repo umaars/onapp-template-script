@@ -1,18 +1,21 @@
 from xml.dom import minidom
+from pathlib import Path
 import subprocess
 import sys
 import requests
 import fileinput
+import os
+import time
 
 
 def xmlparser():
     '''
     Parses a vmware tools XML file and returns all properties in a dictionary
     '''
-    # with open('sample.xml', 'w') as f:
-    #     p1 = subprocess.run(
-    #         'vmtoolsd --cmd "info-get guestinfo.ovfEnv" >> sample.xml', stdout=f, shell=True)
-    #     f.close()
+    with open('sample.xml', 'w') as f:
+        p1 = subprocess.run(
+            'vmtoolsd --cmd "info-get guestinfo.ovfEnv" >> sample.xml', stdout=f, shell=True)
+        f.close()
     PROPERTIES = {}
     p = minidom.parse('sample.xml')
     item_list = p.getElementsByTagName('Property')
@@ -86,7 +89,21 @@ class OvfProperties:
 
 
 p = OvfProperties(**xmlparser())
-print(p)
-print(p.setNetwork("/etc/sysconfig/network-scripts/ifcfg-ens192"))
-print(p.setHostname())
-# print(p.reinstall_rabbitmq())
+
+if os.path.isfile('/root/first-run'):
+    if os.path.isfile('/root/second-run'):
+        print("skipping first time configuration")
+    else:
+        p.reinstall_rabbitmq()
+        time.sleep(2)
+        Path('/root/second-run').touch()
+        time.sleep(2)
+        os.system('shutdown -r now')
+
+else:
+    print(p.setNetwork("/etc/sysconfig/network-scripts/ifcfg-ens160"))
+    p.setHostname()
+    Path('/root/first-run').touch()
+    p.setLicense()
+    time.sleep(5)
+    os.system('shutdown -r now')
