@@ -4,7 +4,7 @@ After=rabbitmq-server.service
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/python3 /root/scripts/onapp-firstboot/run.py
+ExecStart=/usr/bin/python3 /root/scripts/onapp-firstboot/classrun.py
 
 [Install]
 WantedBy=multi-user.target
