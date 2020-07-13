@@ -31,7 +31,6 @@ class OvfProperties:
         self.onapp_ipaddr = kwargs['onapp_ipaddr']
         self.onapp_license = kwargs['onapp_license']
         self.onapp_netmask = kwargs['onapp_netmask']
-        self.onapp_license = kwargs['onapp_license']
 
     def setNetwork(self, file_to_change):
         network_props = {
