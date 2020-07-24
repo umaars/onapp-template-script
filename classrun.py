@@ -76,12 +76,12 @@ class OvfProperties:
         data = r.put(url, json=payload)
         return data.headers
 
-    @staticmethod
-    def reinstall_rabbitmq():
-        rabbitmq_cmd = "/onapp/onapp-rabbitmq/onapp-cp-rabbitmq.sh"
-        x = subprocess.Popen(rabbitmq_cmd)
-        x.wait()
-        return "finished"
+    # @staticmethod
+    # def reinstall_rabbitmq():
+    #     rabbitmq_cmd = "/onapp/onapp-rabbitmq/onapp-cp-rabbitmq.sh"
+    #     x = subprocess.Popen(rabbitmq_cmd)
+    #     x.wait()
+    #     return "finished"
 
     def __str__(self):
         data = f"'onapp_dns': {self.onapp_dns}, 'onapp_fqdn': {self.onapp_fqdn}, 'onapp_gw': {self.onapp_gw}, 'onapp_ipaddr': {self.onapp_ipaddr}, 'onapp_license': {self.onapp_license}, onapp_netmask: {self.onapp_netmask},'onapp_license': {self.onapp_license},"
