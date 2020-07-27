@@ -92,7 +92,7 @@ class OvfProperties:
     @staticmethod
     def change_install_uuid():
         uuid_command = '''su onapp -c "cd /onapp/interface && rails runner -e production 'ApplicationState.regenerate_install_uuid'"'''
-        os.system('uuid_command')
+        os.system(uuid_command)
         print("UUID changed")
 
     def __str__(self):
