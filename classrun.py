@@ -76,6 +76,11 @@ class OvfProperties:
         data = r.put(url, json=payload)
         return data.headers
 
+    def updateSNMP():
+        cmd = f"/onapp/onapp-cp-install/onapp-cp-install.sh -a --quick -i {self.onapp_ipaddr}"
+        x = subprocess.Popen(cmd.split(' '))
+        x.wait()
+
     # Not needed as we are using rabbitmq-env.conf file to set a static hostname for rabbitmq install.
     #  @staticmethod
     # def reinstall_rabbitmq():
@@ -111,7 +116,8 @@ else:
     print(p.setNetwork("/etc/sysconfig/network-scripts/ifcfg-ens160"))
     p.setHostname()
     Path('/root/first-run').touch()
-    #p.setLicense()
+    # p.setLicense()
     time.sleep(5)
     p.change_install_uuid()
+    p.updateSNMP()
     os.system('shutdown -r now')
