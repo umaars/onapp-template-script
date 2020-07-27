@@ -76,7 +76,7 @@ class OvfProperties:
         data = r.put(url, json=payload)
         return data.headers
 
-    def updateSNMP():
+    def updateSNMP(self):
         cmd = f"/onapp/onapp-cp-install/onapp-cp-install.sh -a --quick -i {self.onapp_ipaddr}"
         x = subprocess.Popen(cmd.split(' '))
         x.wait()
