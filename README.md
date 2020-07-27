@@ -15,8 +15,11 @@ Under Properties add the following Keys (without ''):
 'onapp_license'
 'onapp_netmask'
 
+Also create a rabbitmq-env.conf in /etc/rabbitmq and copy rabbitmq-env.conf file in this repository over there.
 
 The following steps will set up the script to run on boot and configure based on above properties:
+
+
 
 yum install python3
 
