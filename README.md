@@ -1,5 +1,6 @@
 # onapp-template-script
-OOP implementation of OnApp OVF 
+
+OOP implementation of OnApp OVF
 
 In order to create the template, first install OnApp along with the open-vm-tools, perl and net-tools.
 In vCenter click on the VM and select "Configure" (right side pane, next to Summary and Monitor), select vApp Options under settings menu.
@@ -19,7 +20,7 @@ Also create a rabbitmq-env.conf in /etc/rabbitmq and copy rabbitmq-env.conf file
 
 The following steps will set up the script to run on boot and configure based on above properties:
 
-
+mkdir -r /etc/rabbitmq (move the rabbitmq-env file to this location for static rabbitmq hostname)
 
 yum install python3
 
@@ -40,4 +41,3 @@ chmod 644 /etc/systemd/system/onapp-boot.service
 systemctl daemon-reload
 
 systemctl enable onapp-boot.service
-

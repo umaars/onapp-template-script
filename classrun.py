@@ -32,7 +32,6 @@ class OvfProperties:
         self.onapp_fqdn = kwargs['onapp_fqdn']
         self.onapp_gw = kwargs['onapp_gw']
         self.onapp_ipaddr = kwargs['onapp_ipaddr']
-        #self.onapp_license = kwargs['onapp_license']
         self.onapp_netmask = kwargs['onapp_netmask']
 
     def setNetwork(self, file_to_change):
@@ -55,7 +54,6 @@ class OvfProperties:
         return network_props
 
     def setHostname(self):
-        # hostname_command = f"hostnamectl set-hostname {self.onapp_fqdn}"
         hostname_command = f"hostnamectl set-hostname {self.onapp_fqdn}"
         x = subprocess.Popen(hostname_command.split(' '))
         x.wait()
@@ -81,14 +79,6 @@ class OvfProperties:
         x = subprocess.Popen(cmd.split(' '))
         x.wait()
 
-    # Not needed as we are using rabbitmq-env.conf file to set a static hostname for rabbitmq install.
-    #  @staticmethod
-    # def reinstall_rabbitmq():
-    #     rabbitmq_cmd = "/onapp/onapp-rabbitmq/onapp-cp-rabbitmq.sh"
-    #     x = subprocess.Popen(rabbitmq_cmd)
-    #     x.wait()
-    #     return "finished"
-
     @staticmethod
     def change_install_uuid():
         uuid_command = '''su onapp -c "cd /onapp/interface && rails runner -e production 'ApplicationState.regenerate_install_uuid'"'''
@@ -103,14 +93,7 @@ class OvfProperties:
 p = OvfProperties(**xmlparser())
 
 if os.path.isfile('/root/first-run'):
-    # if os.path.isfile('/root/second-run'):
     print("skipping first time configuration")
-    # else:
-    #     p.reinstall_rabbitmq()
-    #     time.sleep(2)
-    #     Path('/root/second-run').touch()
-    #     time.sleep(2)
-    #     os.system('shutdown -r now')
 
 else:
     print(p.setNetwork("/etc/sysconfig/network-scripts/ifcfg-ens160"))
