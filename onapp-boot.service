@@ -1,10 +1,11 @@
 [Unit]
-Description=OnApp Configurator
-After=rabbitmq-server.service
+Description=OnApp Template Configurator
+After=mariadb.service rabbitmq-server.service
 
 [Service]
 Type=oneshot
 ExecStart=/usr/bin/python3 /root/scripts/onapp-firstboot/classrun.py
+StandardOutput=journal
 
 [Install]
 WantedBy=multi-user.target

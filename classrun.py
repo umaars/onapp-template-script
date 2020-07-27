@@ -32,7 +32,6 @@ class OvfProperties:
         self.onapp_fqdn = kwargs['onapp_fqdn']
         self.onapp_gw = kwargs['onapp_gw']
         self.onapp_ipaddr = kwargs['onapp_ipaddr']
-        self.onapp_license = kwargs['onapp_license']
         self.onapp_netmask = kwargs['onapp_netmask']
 
     def setNetwork(self, file_to_change):
@@ -55,7 +54,6 @@ class OvfProperties:
         return network_props
 
     def setHostname(self):
-        # hostname_command = f"hostnamectl set-hostname {self.onapp_fqdn}"
         hostname_command = f"hostnamectl set-hostname {self.onapp_fqdn}"
         x = subprocess.Popen(hostname_command.split(' '))
         x.wait()
@@ -76,12 +74,16 @@ class OvfProperties:
         data = r.put(url, json=payload)
         return data.headers
 
-    @staticmethod
-    def reinstall_rabbitmq():
-        rabbitmq_cmd = "/onapp/onapp-rabbitmq/onapp-cp-rabbitmq.sh"
-        x = subprocess.Popen(rabbitmq_cmd)
+    def updateSNMP(self):
+        cmd = f"/onapp/onapp-cp-install/onapp-cp-install.sh -a --quick -i {self.onapp_ipaddr}"
+        x = subprocess.Popen(cmd.split(' '))
         x.wait()
-        return "finished"
+
+    @staticmethod
+    def change_install_uuid():
+        uuid_command = '''su onapp -c "cd /onapp/interface && rails runner -e production 'ApplicationState.regenerate_install_uuid'"'''
+        os.system(uuid_command)
+        print("UUID changed")
 
     def __str__(self):
         data = f"'onapp_dns': {self.onapp_dns}, 'onapp_fqdn': {self.onapp_fqdn}, 'onapp_gw': {self.onapp_gw}, 'onapp_ipaddr': {self.onapp_ipaddr}, 'onapp_license': {self.onapp_license}, onapp_netmask: {self.onapp_netmask},'onapp_license': {self.onapp_license},"
@@ -91,19 +93,14 @@ class OvfProperties:
 p = OvfProperties(**xmlparser())
 
 if os.path.isfile('/root/first-run'):
-    if os.path.isfile('/root/second-run'):
-        print("skipping first time configuration")
-    else:
-        p.reinstall_rabbitmq()
-        time.sleep(2)
-        Path('/root/second-run').touch()
-        time.sleep(2)
-        os.system('shutdown -r now')
+    print("skipping first time configuration")
 
 else:
     print(p.setNetwork("/etc/sysconfig/network-scripts/ifcfg-ens160"))
     p.setHostname()
     Path('/root/first-run').touch()
-    p.setLicense()
+    # p.setLicense()
     time.sleep(5)
+    p.change_install_uuid()
+    p.updateSNMP()
     os.system('shutdown -r now')
