@@ -13,7 +13,6 @@ Under Properties add the following Keys (without ''):
 'onapp_fqdn'
 'onapp_gw'
 'onapp_ipaddr'
-'onapp_license'
 'onapp_netmask'
 
 Also create a rabbitmq-env.conf in /etc/rabbitmq and copy rabbitmq-env.conf file in this repository over there.
